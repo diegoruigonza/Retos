@@ -1,5 +1,6 @@
 import mysql.connector
 import json
+from prettytable import PrettyTable
 
 # Leer credenciales desde el JSON
 with open('config.json', 'r') as f:
@@ -17,11 +18,16 @@ try:
     cursor = conexion.cursor()
     cursor.execute("SELECT id, marca, modelo, color, km, precio FROM coches")
     
-    print(f"{'ID':<5} {'MARCA':<15} {'MODELO':<15} {'COLOR':<10} {'KM':<10} {'PRECIO':<10}")
-    print("-" * 70)
+    # Crear la tabla y definir las columnas
+    tabla = PrettyTable()
+    tabla.field_names = ["ID", "Marca", "Modelo", "Color", "Kilometraje", "Precio"]
     
+    # Añadir cada fila a la tabla
     for coche in cursor.fetchall():
-        print(f"{coche[0]:<5} {coche[1]:<15} {coche[2]:<15} {coche[3]:<10} {coche[4]:<10} {coche[5]:<10}")
+        tabla.add_row(coche)
+    
+    # Imprimir la tabla
+    print(tabla)
 
 except mysql.connector.Error as err:
     print(f"Error de conexión: {err}")
